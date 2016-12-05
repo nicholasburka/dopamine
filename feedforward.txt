@@ -1,0 +1,9 @@
+model {
+  for(i in 1:n.stim) {
+    output[i] <- 1/(1 + exp(-(reward.activation[i]%*%r.to.o)))
+    reward.activation[i] <- 1/(1 + exp(-(input[i]%*%i.to.r)))
+    
+  }
+  
+  r.to.o ~ <- matrix(rnorm(n.inputs*n.reward,mean=0,sd=1), nrow=n.inputs, ncol=n.reward)
+}
