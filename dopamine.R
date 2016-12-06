@@ -14,7 +14,7 @@ gen.training.exclus <- function(num.each) {
   num.types <- 5
   data <- list(
     input=matrix(data=0,nrow=n.inputs,ncol=num.each*num.types),
-    output=rep(0, num.types*num.each) #output is the probability of reward
+    output=as.numeric(rep(0, num.types*num.each)) #output is the probability of reward
   )
   
   stims <- sample(0:4, num.each*num.types, replace=TRUE)
@@ -37,12 +37,14 @@ training <- gen.training.exclus(5)
 a<- c(1,2,3,4,5)
 a[4:6] <- c(1,2,3)
 
+
 jags.data <- list(
   n.inputs=n.inputs,
   n.reward=n.reward,
   n.outputs=n.outputs,
   input=training$input,
-  output=training$output
+  output=training$output,
+  n.stim=length(training$output)
 )
 
 result <- run.jags('feedforward.txt', monitor=c('ro.mu'), data=jags.data, n.chains=3, burnin=1000, sample=10000)
