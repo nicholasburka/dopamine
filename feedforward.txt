@@ -1,9 +1,22 @@
 model {
+
   for(i in 1:n.stim) {
-    output[i] <- 1/(1 + exp(-(reward.activation[i]%*%r.to.o)))
-    reward.activation[i] <- 1/(1 + exp(-(input[i]%*%i.to.r)))
-    
+    output[i] <- sigmoid.activation(reward.activation[i]%*%matrix(data=r.to.o, nrow=n.reward,ncol=n.output))
+    reward.activation[i] <- sigmoid.activation(input[,i]%*%matrix(i.to.r, nrow=n.input,ncol=n.reward))
   }
   
-  r.to.o ~ <- matrix(rnorm(n.inputs*n.reward,mean=0,sd=1), nrow=n.inputs, ncol=n.reward)
+  for(i in 1:n.reward*n.outputs)) {
+    r.to.o[i] ~ dnorm(ro.mu[i], ro.sd[i])
+    ro.mu[i] ~ dunif(-1,1)
+    ro.sd[i] ~ dunif(-1,1)
+  }
+  for(i in 1:(n.inputs*n.reward)) {
+    i.to.r[i] ~ dnorm(ir.mu[i],ir.sd[i])
+    ir.mu[i] ~ dunif(-1,1)
+    ir.sd[i] ~ dunif(-1,1)
+  }
+  
+  
+  output[i,stim] <- sigmoid.activation()
+
 }
