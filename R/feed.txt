@@ -1,0 +1,29 @@
+model {
+
+  for(stim in 1:n.stim) {
+    output[stim] ~ dnorm(out[stim], sig)
+    
+    out[stim] <- 1/(1+exp(-sum(reward.activation[,stim] %*% r.to.o)))
+    
+    for (r in 1:n.reward) {
+      reward.activation[r,stim] <- 1/(1+exp(-sum(input[,stim] %*% i.to.r)))
+    }
+    
+  }
+  
+  sig ~ dunif(0,0.01)
+  
+  for(r in 1:n.reward) {
+      r.to.o[r] ~ dnorm(ro.mu[r], pow(ro.sd[r], -2))
+      ro.mu[r] ~ dunif(0,1)
+      ro.sd[r] ~ dunif(0,1)
+  }
+  for (i in 1:n.inputs) {
+    for (r in 1:n.reward) {
+      i.to.r[i,r] ~ dnorm(ir.mu[i,r],pow(ir.sd[i,r], -2))
+      ir.mu[i,r] ~ dunif(0,1)
+      ir.sd[i,r] ~ dunif(0,1)
+    }
+  }
+
+}
